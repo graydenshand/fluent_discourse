@@ -1,4 +1,9 @@
 # Fluent Discourse
+<p>
+	<a href="https://github.com/graydenshand/fluent_discourse/actions/workflows/build.yml"><img src="https://github.com/graydenshand/fluent_discourse/actions/workflows/build.yml/badge.svg?branch=main" alt="Build and test"/></a>
+	<a href="https://codecov.io/gh/graydenshand/fluent_discourse"><img src="https://codecov.io/gh/graydenshand/fluent_discourse/branch/main/graph/badge.svg?token=Z9RR4GWFXI" alt="Code Coverage" /></a>
+</p>
+
 This package implements a fluent interface to the Discourse API. 
 
 Instead of mapping every endpoint and method to a unique function, we present a framework for making any request.

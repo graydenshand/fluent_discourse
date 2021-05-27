@@ -1,6 +1,7 @@
 from conf_tests import BASE_URL, client
 import pytest
 import os
+from requests.exceptions import HTTPError
 
 
 @pytest.mark.integration
@@ -31,12 +32,7 @@ def test_update_site_title(client):
     # Update the site setting
     data = {"title": title}
     response = client.admin.site_settings.title.put(data)
-
-    # Get new value and verify it has changed
-    settings = client.admin.site_settings.json.get()
-    assert "site_settings" in settings.keys()
-    title2 = settings["site_settings"][1]["value"]
-    assert title == title
+    assert response == ""
 
 
 @pytest.mark.integration
@@ -51,3 +47,9 @@ def test_delete_group(client):
     response = client.admin.groups[group_id].json.delete()
     assert "success" in response.keys()
     assert response["success"] == "OK"
+
+
+@pytest.mark.integration
+def test_bad_request(client):
+    with pytest.raises(HTTPError):
+        response = client.nonexistant.endpoint.get()

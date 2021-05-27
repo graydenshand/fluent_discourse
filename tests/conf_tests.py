@@ -1,6 +1,7 @@
 import pytest
 import os
 from fluent_discourse import Discourse
+from mock_server import create_app
 
 BASE_URL = os.environ.get("DISCOURSE_URL")
 USERNAME = os.environ.get("DISCOURSE_USERNAME")
