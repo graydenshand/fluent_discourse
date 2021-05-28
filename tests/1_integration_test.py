@@ -1,7 +1,7 @@
 from conf_tests import BASE_URL, client
 import pytest
 import os
-from requests.exceptions import HTTPError
+from fluent_discourse import *
 
 
 @pytest.mark.integration
@@ -50,6 +50,28 @@ def test_delete_group(client):
 
 
 @pytest.mark.integration
-def test_bad_request(client):
-    with pytest.raises(HTTPError):
+def test_page_not_found_error(client):
+    with pytest.raises(PageNotFoundError):
         response = client.nonexistant.endpoint.get()
+
+
+@pytest.mark.integration
+def test_unauthorized_error():
+    with pytest.raises(UnauthorizedError):
+        client = Discourse(BASE_URL, "graydenshand", "bad_api_key")
+        client.posts.json.get()
+
+
+@pytest.mark.integration
+def test_rate_limit_error(client):
+    with pytest.raises(RateLimitError):
+        for i in range(70):
+            client.categories.json.get()
+
+
+@pytest.mark.integration
+def test_wait_for_rate_limit():
+    # Should hit rate limit, wait and ultimately retrigger the connection
+    client = Discourse.from_env(raise_for_rate_limit=False)
+    categories = client.categories.json.get()
+    assert "category_list" in categories.keys()

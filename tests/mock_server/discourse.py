@@ -2,6 +2,9 @@ from flask import Blueprint, jsonify
 
 discourse = Blueprint("discourse", __name__)
 
+global N_REQUESTS_FOR_RATE_LIMIT
+N_REQUESTS_FOR_RATE_LIMIT = 2
+
 
 @discourse.route("/")
 def healthcheck():
@@ -405,3 +408,181 @@ def create_a_group():
 def delete_a_group(group_id):
     response = {"success": "OK"}
     return jsonify(response), 200
+
+
+@discourse.route("/categories.json", methods=["GET"])
+def raise_rate_limit_error():
+    global N_REQUESTS_FOR_RATE_LIMIT
+    N_REQUESTS_FOR_RATE_LIMIT -= 1
+    if N_REQUESTS_FOR_RATE_LIMIT >= 0:
+        response = {"extras": {"wait_seconds": "3"}}
+        return jsonify(response), 429
+    else:
+        response = {
+            "category_list": {
+                "can_create_category": True,
+                "can_create_topic": True,
+                "categories": [
+                    {
+                        "id": 3,
+                        "name": "Staff",
+                        "color": "E45735",
+                        "text_color": "FFFFFF",
+                        "slug": "staff",
+                        "topic_count": 4,
+                        "post_count": 7,
+                        "position": 2,
+                        "description": "<p>Private category for staff discussions. Topics are only visible to admins and moderators.</p>",
+                        "description_text": "Private category for staff discussions. Topics are only visible to admins and moderators.",
+                        "description_excerpt": "Private category for staff discussions. Topics are only visible to admins and moderators.",
+                        "topic_url": "/t/about-the-staff-category/2",
+                        "read_restricted": True,
+                        "permission": 1,
+                        "notification_level": 1,
+                        "can_edit": True,
+                        "topic_template": None,
+                        "has_children": False,
+                        "sort_order": None,
+                        "sort_ascending": None,
+                        "show_subcategory_list": False,
+                        "num_featured_topics": 3,
+                        "default_view": None,
+                        "subcategory_list_style": "rows_with_featured_topics",
+                        "default_top_period": "all",
+                        "default_list_filter": "all",
+                        "minimum_required_tags": 0,
+                        "navigate_to_first_post_after_read": False,
+                        "topics_day": 0,
+                        "topics_week": 4,
+                        "topics_month": 4,
+                        "topics_year": 4,
+                        "topics_all_time": 4,
+                        "subcategory_ids": [],
+                        "uploaded_logo": None,
+                        "uploaded_background": None,
+                    },
+                    {
+                        "id": 4,
+                        "name": "Lounge",
+                        "color": "A461EF",
+                        "text_color": "652D90",
+                        "slug": "lounge",
+                        "topic_count": 1,
+                        "post_count": 1,
+                        "position": 3,
+                        "description": "<p>A category exclusive to members with trust level 3 and higher.</p>",
+                        "description_text": "A category exclusive to members with trust level 3 and higher.",
+                        "description_excerpt": "A category exclusive to members with trust level 3 and higher.",
+                        "topic_url": "/t/about-the-lounge-category/3",
+                        "read_restricted": True,
+                        "permission": 1,
+                        "notification_level": 1,
+                        "can_edit": True,
+                        "topic_template": None,
+                        "has_children": False,
+                        "sort_order": None,
+                        "sort_ascending": None,
+                        "show_subcategory_list": False,
+                        "num_featured_topics": 3,
+                        "default_view": None,
+                        "subcategory_list_style": "rows_with_featured_topics",
+                        "default_top_period": "all",
+                        "default_list_filter": "all",
+                        "minimum_required_tags": 0,
+                        "navigate_to_first_post_after_read": False,
+                        "topics_day": 0,
+                        "topics_week": 1,
+                        "topics_month": 1,
+                        "topics_year": 1,
+                        "topics_all_time": 1,
+                        "subcategory_ids": [],
+                        "uploaded_logo": None,
+                        "uploaded_background": None,
+                    },
+                    {
+                        "id": 1,
+                        "name": "Uncategorized",
+                        "color": "0088CC",
+                        "text_color": "FFFFFF",
+                        "slug": "uncategorized",
+                        "topic_count": 1,
+                        "post_count": 1,
+                        "position": 0,
+                        "description": "Topics that don't need a category, or don't fit into any other existing category.",
+                        "description_text": "Topics that don't need a category, or don't fit into any other existing category.",
+                        "description_excerpt": "Topics that don't need a category, or don't fit into any other existing category.",
+                        "topic_url": None,
+                        "read_restricted": False,
+                        "permission": 1,
+                        "notification_level": 1,
+                        "can_edit": True,
+                        "topic_template": None,
+                        "has_children": False,
+                        "sort_order": None,
+                        "sort_ascending": None,
+                        "show_subcategory_list": False,
+                        "num_featured_topics": 3,
+                        "default_view": None,
+                        "subcategory_list_style": "rows_with_featured_topics",
+                        "default_top_period": "all",
+                        "default_list_filter": "all",
+                        "minimum_required_tags": 0,
+                        "navigate_to_first_post_after_read": False,
+                        "topics_day": 0,
+                        "topics_week": 1,
+                        "topics_month": 1,
+                        "topics_year": 1,
+                        "topics_all_time": 1,
+                        "is_uncategorized": True,
+                        "subcategory_ids": [],
+                        "uploaded_logo": None,
+                        "uploaded_background": None,
+                    },
+                    {
+                        "id": 2,
+                        "name": "Site Feedback",
+                        "color": "808281",
+                        "text_color": "FFFFFF",
+                        "slug": "site-feedback",
+                        "topic_count": 0,
+                        "post_count": 0,
+                        "position": 1,
+                        "description": "<p>Discussion about this site, its organization, how it works, and how we can improve it.</p>",
+                        "description_text": "Discussion about this site, its organization, how it works, and how we can improve it.",
+                        "description_excerpt": "Discussion about this site, its organization, how it works, and how we can improve it.",
+                        "topic_url": "/t/about-the-site-feedback-category/1",
+                        "read_restricted": False,
+                        "permission": 1,
+                        "notification_level": 1,
+                        "can_edit": True,
+                        "topic_template": None,
+                        "has_children": False,
+                        "sort_order": None,
+                        "sort_ascending": None,
+                        "show_subcategory_list": False,
+                        "num_featured_topics": 3,
+                        "default_view": None,
+                        "subcategory_list_style": "rows_with_featured_topics",
+                        "default_top_period": "all",
+                        "default_list_filter": "all",
+                        "minimum_required_tags": 0,
+                        "navigate_to_first_post_after_read": False,
+                        "topics_day": 0,
+                        "topics_week": 0,
+                        "topics_month": 0,
+                        "topics_year": 0,
+                        "topics_all_time": 0,
+                        "subcategory_ids": [],
+                        "uploaded_logo": None,
+                        "uploaded_background": None,
+                    },
+                ],
+            }
+        }
+        return jsonify(response), 200
+
+
+@discourse.route("/posts.json", methods=["GET"])
+def raise_unauthorized_error():
+    response = {"error": "Invalid Credentials"}
+    return jsonify(response), 403
