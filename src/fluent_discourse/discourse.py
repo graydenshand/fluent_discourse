@@ -62,7 +62,6 @@ class Discourse:
             return self._handle_error(r, method, url, data, params)
 
     def _handle_error(self, response, method, url, data, params):
-        self._cache = []
         if response.status_code == 404:
             raise PageNotFoundError(
                 f"The requested page was not found, or you do not have permission to access it: {response.url}"
@@ -94,25 +93,21 @@ class Discourse:
     def get(self, data=None):
         # Make a get request
         url = self._make_url()
-        self._cache = []
         return self._request("GET", url, params=data)
 
     def post(self, data=None):
         # Make a post request
         url = self._make_url()
-        self._cache = []
         return self._request("POST", url, data=data)
 
     def put(self, data=None):
         # Make a put request
         url = self._make_url()
-        self._cache = []
         return self._request("PUT", url, data=data)
 
     def delete(self, data=None):
         # Make a delete request
         url = self._make_url()
-        self._cache = []
         return self._request("DELETE", url, data=data)
 
     def _make_url(self):
