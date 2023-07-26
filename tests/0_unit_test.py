@@ -2,6 +2,7 @@ from conf_tests import BASE_URL, client, USERNAME, API_KEY
 from fluent_discourse import *
 import pytest
 import json
+from unittest.mock import patch
 
 
 def test_accumulate_strings(client):
@@ -72,3 +73,18 @@ def test_wait_for_rate_limit():
     MockResponse.status_code = 429
     client = Discourse.from_env(raise_for_rate_limit=False)
     client._wait_for_rate_limit(MockResponse, "GET", None, None, None)
+
+
+def test_reuse_endpoint(client):
+    with patch("fluent_discourse.Discourse._request"):
+        endpoint = client.test.a.path
+        assert endpoint._cache == ["test", "a", "path"]
+        endpoint.get({"foo": "bar"})
+        assert endpoint._cache == ["test", "a", "path"]
+
+
+def test_reuse_client(client):
+    with patch("fluent_discourse.Discourse._request"):
+        client.test.a.path.get()
+        endpoint = client.foo.bar
+        assert endpoint._cache == ["foo", "bar"]
